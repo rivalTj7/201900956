@@ -1,9 +1,19 @@
-FROM python:3.10-slim-buster
+# app/Dockerfile
 
-COPY . /usr/src/app
+FROM python:3.9-slim
 
-WORKDIR /usr/src/app
+EXPOSE 8501
 
-RUN pip install -r requirements.txt
+WORKDIR /app
 
-ENTRYPOINT streamlit run app.py
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    software-properties-common \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN git clone https://github.com/rivalTj7/201900956_OLC2_P2 .
+
+RUN pip3 install -r requirements.txt
+
+ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]

@@ -5,3 +5,4 @@ streamlit
 cachetools
 matplotlib
 plost
+streamlit-option-menu
