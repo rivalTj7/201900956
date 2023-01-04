@@ -27,8 +27,8 @@ def polynomialReg():
             #Caja de seleccion de variables
             with st.expander("   Variables"):
                 index1, index2 = st.columns(2)
-                index1 = st.selectbox("Seleccione X", data.keys())
-                index2 = st.selectbox("Seleccione Y", data.keys())
+                index1 = st.selectbox("Seleccione X", (data.columns), index=0) 
+                index2 = st.selectbox("Seleccione Y", (data.columns), index=1) 
             #Grado del polinomio
             with st.expander("   Grado del polinomio"):
                 grado = st.number_input(

@@ -4,10 +4,7 @@ import streamlit as st
 #Maching learnign Imports
 import pandas as pd
 
-#Agregar un boton para cargar el archivo
-
 #importo otra page
-# pd.DataFrame
 class File:
     def __init__(self):
         pass
