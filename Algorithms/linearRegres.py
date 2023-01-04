@@ -1,7 +1,4 @@
 #Maching learnign Imports
-import pandas as pd
-#Graphs imports
-import plotly.graph_objects as go
 #Importing the libraries
 from Records.File import File
 from sklearn.linear_model import LinearRegression

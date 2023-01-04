@@ -1,5 +1,4 @@
 #Maching learnign Imports
-from sklearn.preprocessing import PolynomialFeatures
 import streamlit as st;
 import numpy as np;
 import matplotlib.pyplot as plt;
@@ -7,7 +6,6 @@ from sklearn import preprocessing
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 #Local Imports
 from Records.File import File;
-import re
 
 fil = File()
 

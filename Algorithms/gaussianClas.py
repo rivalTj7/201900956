@@ -3,7 +3,6 @@ import numpy as np
 from sklearn import preprocessing
 from sklearn.naive_bayes import GaussianNB
 from Records.File import File
-import re
 
 fil = File()
 def gaussianClas():
