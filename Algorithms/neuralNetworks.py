@@ -2,12 +2,15 @@
 import streamlit as st
 #Maching learnign Imports
 from sklearn.neural_network import MLPClassifier
-from sklearn import preprocessing
-from sklearn import linear_model
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.metrics import mean_squared_error, accuracy_score, classification_report
+#import numpy as np
 import numpy as np
 #Local Imports
 from Records.File import File
+#import plotly.express as px
+import plotly.express as px
 
 fil = File()
 
@@ -18,15 +21,63 @@ def neuraNetworks():
     if (data is not None):
 
         with st.form("entry_form", clear_on_submit=True):
+            target_options = data.columns
             with st.expander("   Variables"):
-                clas = st.text_input("Seleccione la columna de clasificacion: ") 
-                respo = st.text_input("Seleccione la columna de Respuesta: ") 
+                clas = st.selectbox("Seleccione la columna de clasificacion: ",(target_options)) 
+                respo = st.multiselect("Seleccione la columna de Respuesta: ", (data.drop(columns=[clas]).columns)) 
             with st.expander("Valores de Interes"):
-                vals = st.text_input("Separar por coma")
+                vals = st.text_input("Valor a inspeccionar")
 
             submitted = st.form_submit_button("Save Data")
             
             if submitted:
+                #Jalando los valores 
+                X = data[respo]
+                y = data[clas].values
+
+                le = LabelEncoder()
+
+                y = le.fit_transform(y.flatten())
+
+                try:
+                    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+                except:
+                    st.markdown('<span style="color:red">Error en la carga de datos <br /> cuando coloque datos en forma de vector coloquele la coma <br /> </span>', unsafe_allow_html=True)  
+                
+                #Configuracion de la red neuronal
+                
+                scaler = StandardScaler()  
+                scaler.fit(X_train)
+                X_train = scaler.transform(X_train)  
+                X_test = scaler.transform(X_test)
+
+                #Creando la red neuronal
+                clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
+
+                clf.fit(X_train, y_train)
+                y_pred = clf.predict(X_test)
+                score = accuracy_score(y_test, y_pred) * 100
+                report = classification_report(y_test, y_pred)
+                st.text("Precision del modelo: ")
+                st.write(score,"%")
+                fig = px.histogram(data[clas], x =clas)
+                st.plotly_chart(fig)
+
+                if vals != "":
+                    #Guardar los valores
+                    valuesPredict = np.array([])
+                    for column in respo:
+                        valuesPredict = np.append(valuesPredict, vals)
+                    #Crear la prediccion
+                    valuesPredict = valuesPredict.reshape(1,-1)
+                    scaler = StandardScaler()  
+                    scaler.fit(X_train)  
+                    valuesPredict = scaler.transform(valuesPredict)	
+                    pred = clf.predict(valuesPredict)
+                    st.write("La prediccion es:  ", str(le.inverse_transform(pred)))
+
+
+            """if submitted:
 
                 if respo != "":
                     X = clas.split(sep =  ",")
@@ -89,5 +140,4 @@ def neuraNetworks():
                     print('arreglo de entrada: ',vars)
                     model.fit(VarX,VarY)
                     st.header('Resultado:')
-                    st.subheader(model.predict([map_obj]))
-
+                    st.subheader(model.predict([map_obj]))"""
